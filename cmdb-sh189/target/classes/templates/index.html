@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" th:href="@{/css/page.css}" />
+<style type="text/css">
+table {
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: rgb(211, 202, 221);
+}
+
+/* Padding and font style */
+table td, tableth {
+	padding: 5px 10px;
+	font-size: 12px;
+	font-family: Verdana;
+	color: rgb(95, 74, 121);
+}
+
+/* Alternating background colors */
+table tr:nth-child(even) {
+	background: rgb(223, 216, 232)
+}
+
+table tr:nth-child(odd) {
+	background: #FFF
+}
+</style>
+<title>index</title>
+</head>
+<body>
+
+	<table id="table" align='center'>
+		<thead>
+			<th>文件名</th>
+			<th>版本</th>
+			<th>上传日期</th>
+			<th>操作</th>
+		</thead>
+		<tbody ></tbody>
+	</table>
+
+	<ul class="page" align='center' maxshowpageitem="5" pagelistcount="10" id="page"></ul>
+	<br />
+	<br />
+	<br />
+	<br />
+	<form action="/upload" method="post" enctype="multipart/form-data">
+		<input type="file" name="file" value="选择文件" /><br /> <input
+			type="submit" value="上传文件" />
+	</form>
+	<form action="/file" method="post">
+		<input type="text" name="fileName" /><br /> 
+		<input type="submit" value="搜索" />
+	</form>
+	<script th:src="@{/js/jquery-1.9.1.js}"></script>
+	<script th:src="@{/js/page.js}"></script>
+
+	<script th:inline="javascript">
+		function getData(p) {
+			$.post("/fileList", {
+				pageNum : p,
+				fileName:fileName
+			}, function(data) {
+				var files = data.list;
+				$("#table tbody").html("");
+				for ( var i in files) {
+					$("table").append(
+							"<tr><td>" + files[i].FileName + "</td>"+
+							"<td>"+ files[i].Version + "</td>"+
+							"<td>"+ files[i].Date + "</td>"+
+							"<td><a href='/download?fileName="+files[i].FileName+"&version="+files[i].Version+"'>下载</a></td>"+
+// 							"<td><a th:href="@{/download(fileName=files[i].FileName,version=files[i].Version)}">下载</a></td>"+
+							"</tr>");
+				}
+			});
+		}
+		var total = /*[[${total}]]*/
+		var fileName = /*[[${fileName}]]*/
+		$("#page").initPage(total, 1, getData);
+	</script>
+</body>
+</html>

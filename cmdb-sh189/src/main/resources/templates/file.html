@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Insert title here</title>
+<style type="text/css">
+/* Border styles */
+#table-1 thead, #table-1 tr {
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: rgb(230, 189, 189);
+}
+
+#table-1 {
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: rgb(230, 189, 189);
+}
+
+/* Padding and font style */
+#table-1 td, #table-1 th {
+	padding: 5px 10px;
+	font-size: 12px;
+	font-family: Verdana;
+	color: rgb(177, 106, 104);
+}
+
+/* Alternating background colors */
+#table-1 tr:nth-child(even) {
+	background: rgb(238, 211, 210)
+}
+
+#table-1 tr:nth-child(odd) {
+	background: #FFF
+}
+</style>
+
+</head>
+<body style="margin: 0 auto;">
+	<table id="table-1">
+		<thead>
+			<th>文件名</th>
+			<th>版本</th>
+			<th>上传日期</th>
+			<th>操作</th>
+		</thead>
+		<tbody>
+			<tr th:each="file : ${fileList.list}">
+				<td th:text="${file.FileName}"></td>
+				<td th:text="${file.Version}"></td>
+				<td th:text="${file.Date}"></td>
+				<td><a th:href="@{/download(fileName=${file.FileName},version=${file.Version})}">下载</a></td>
+			</tr>
+		</tbody>
+	</table>
+	<form action="/upload" method="post" enctype="multipart/form-data">
+		<input type="file" name="file" value="选择文件" /><br /> <input
+			type="submit" value="上传文件" />
+	</form>
+</body>
+</html>
